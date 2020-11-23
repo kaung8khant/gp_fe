@@ -52,7 +52,7 @@ export default function BottomTabNavigator({ navigation, route }) {
     },
     labelStyle: {
       fontSize: 12,
-      fontFamily: zawgyi ? "Zawgyi" : "Pyidaungsu",
+      fontFamily: zawgyi ? "" : "Pyidaungsu",
     },
   };
   navigation.setOptions({

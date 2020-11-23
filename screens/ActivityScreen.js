@@ -12,6 +12,7 @@ import { RectButton, ScrollView } from "react-native-gesture-handler";
 import { getActivity } from "../api/activiy";
 import { string_excerpt } from "../utils/string";
 import analytics from "@react-native-firebase/analytics";
+import CustomText from "../components/CustomText";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -19,12 +20,18 @@ export default function ActivityScreen({ navigation }) {
   const [noti, setNoti] = useState(null);
 
   useEffect(() => {
-    if (!noti) {
+    const unsubscribe = navigation.addListener("focus", () => {
+      console.log("activity");
+      // do something
+      //setNoti(null);
       getActivity().then((data) => {
+        console.log("activity", data);
         setNoti(data);
       });
-    }
-  }, [noti]);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   if (!noti) {
     return (
@@ -98,13 +105,7 @@ export default function ActivityScreen({ navigation }) {
                     width: deviceWidth - 120,
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "Pyidaungsu",
-                    }}
-                  >
-                    {item.name}
-                  </Text>
+                  <CustomText>{item.name}</CustomText>
                 </View>
                 <View
                   style={{
@@ -112,16 +113,12 @@ export default function ActivityScreen({ navigation }) {
                     wordBreak: "break-word",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "Pyidaungsu",
-                    }}
-                  >
+                  <CustomText>
                     {string_excerpt(item.description, 35)}
-                  </Text>
+                  </CustomText>
                 </View>
                 <View style={{ fontSize: 10 }}>
-                  <Text>{item.time}</Text>
+                  <CustomText>{item.time}</CustomText>
                 </View>
               </View>
             </TouchableOpacity>

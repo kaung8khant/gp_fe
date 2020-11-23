@@ -6,6 +6,7 @@ import { activityDetail } from "../api/activiy";
 import moment from "moment";
 import Button from "../components/Button";
 import analytics from "@react-native-firebase/analytics";
+import CustomText from "../components/CustomText";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -45,14 +46,12 @@ export default function ActivityDetailScreen({ route, navigation }) {
       contentContainerStyle={styles.contentContainer}
     >
       <View>
-        <Text
-          style={{ fontWeight: "bold", fontSize: 16, fontFamily: "Pyidaungsu" }}
-        >
+        <CustomText style={{ fontWeight: "bold", fontSize: 16 }}>
           {activity.name}
-        </Text>
+        </CustomText>
       </View>
       <View>
-        <Text
+        <CustomText
           style={{
             fontWeight: "bold",
             fontSize: 10,
@@ -61,7 +60,7 @@ export default function ActivityDetailScreen({ route, navigation }) {
           }}
         >
           {moment(activity.updated_at).format("DD/MM/YYYY")}
-        </Text>
+        </CustomText>
       </View>
       {img && (
         <View style={styles.imageContainer}>
@@ -70,18 +69,16 @@ export default function ActivityDetailScreen({ route, navigation }) {
       )}
 
       <View style={{ marginTop: 24 }}>
-        <Text
+        <CustomText
           style={{
             fontWeight: "bold",
             fontSize: 14,
             color: "#828282",
             wordBreak: "break-word",
-            whiteSpace: "pre-line",
-            fontFamily: "Pyidaungsu",
           }}
         >
           {activity.description}
-        </Text>
+        </CustomText>
       </View>
       <View style={{ position: "relative", marginTop: 80 }}>
         {activity.product && (

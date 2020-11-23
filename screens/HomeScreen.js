@@ -12,13 +12,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import AuthContext from "../utils/context/AuthContext";
-import { getProduct, getArticle } from "../api/explore";
+import { getProduct, getArticle, getCurrentWeather } from "../api/explore";
 import { string_excerpt } from "../utils/string";
 import analytics from "@react-native-firebase/analytics";
 import CustomText from "../components/CustomText";
 import { mm_number } from "../utils/burmese";
 import FontContext from "../utils/context/FontContext";
 import { font_converter } from "../utils/string";
+import WeatherCard from "../components/WeatherCard";
 
 import TabBarIcon from "../components/TabBarIcon";
 
@@ -28,6 +29,7 @@ export default function HomeScreen({ navigation }) {
   const [product, setProduct] = useState([]);
   const [article, setArticle] = useState([]);
   const [cropId, setCropId] = useState(null);
+  const [weather, setWeather] = useState(null);
   const { zawgyi, setZawgyi } = useContext(FontContext);
 
   const converter = (string) => font_converter(string, zawgyi);
@@ -36,15 +38,19 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     getProduct().then((productdata) => {
       getArticle().then((data) => {
-        setProduct(productdata);
-        setArticle(data);
+        getCurrentWeather().then((weatherdata) => {
+          setWeather(weatherdata);
+        });
+        setProduct(productdata ? productdata : []);
+        setArticle(data ? data : []);
       });
     });
   }, []);
-  if (!product && !article) {
+
+  if (!product && !article && !weather) {
     return (
       <ScrollView style={styles.container}>
-        <CustomText>Loading</CustomText>
+        <Text>Loading</Text>
       </ScrollView>
     );
   }
@@ -176,7 +182,7 @@ export default function HomeScreen({ navigation }) {
                 style={{
                   fontSize: 14,
                   color: "#1D9129",
-                  fontFamily: zawgyi ? "Zawgyi" : "Pyidaungsu",
+                  fontFamily: zawgyi ? "" : "Pyidaungsu",
                 }}
               >
                 {converter(mm_number(product[pkey + k].maximum_retail_price))}
@@ -201,69 +207,9 @@ export default function HomeScreen({ navigation }) {
   }
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View
-          style={{
-            padding: 10,
-            borderRadius: 4,
-            borderWidth: 1,
-            borderRadius: 2,
-            borderColor: "#ddd",
-            borderBottomWidth: 0,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-
-            elevation: 5,
-            flex: 1,
-            flexDirection: "row",
-          }}
-        >
-          <View style={{ width: "33.3%", height: 100 }}>
-            <Image
-              style={{ width: "90%", height: 100 }}
-              source={require("../assets/images/cloudy.png")}
-            />
-          </View>
-          <View
-            style={{
-              width: "33.3%",
-              height: 100,
-              flex: 1,
-              flexDirection: "column",
-              textAlign: "center",
-              padding: 20,
-            }}
-          >
-            <Text>Cloudy</Text>
-            <Text style={{ fontSize: 30 }}>22'C</Text>
-          </View>
-          <View style={{ width: "33.3%", height: 100, padding: 20 }}>
-            <Text
-              style={{
-                backgroundColor: "#E7F5E7",
-                elevation: 0,
-                shadowOffset: {
-                  width: 0,
-                  height: 0,
-                },
-                textAlign: "center",
-                position: "absolute",
-                right: 20,
-                bottom: 20,
-                padding: 5,
-              }}
-            >
-              Yangon
-            </Text>
-          </View>
-        </View>
-
-        {feed}
+      <ScrollView style={{ padding: 5 }}>
+        <WeatherCard data={weather} navigation={navigation} />
+        <View style={{ padding: 15 }}>{feed}</View>
       </ScrollView>
     </View>
   );
@@ -280,7 +226,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 20,
+
     backgroundColor: "#fff",
   },
   imageContainer: {

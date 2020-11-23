@@ -22,7 +22,7 @@ const login = async (
       };
       await FCM_token(response.data.data.token);
       if (response.data.data.is_new_user) {
-        AsyncStorage.setItem("new_user", 1);
+        AsyncStorage.setItem("new_user", "1");
         callback2();
       } else {
         let token = await AsyncStorage.getItem("access_token");

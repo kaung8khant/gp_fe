@@ -37,19 +37,19 @@ const Dropdown = ({
       dropDownMaxHeight={dropDownMaxHeight}
       disabled={disabled}
       style={{
-        fontFamily: zawgyi ? "Zawgyi" : "Pyidaungsu",
+        fontFamily: zawgyi ? "" : "Pyidaungsu",
         backgroundColor: "#F0F7F1",
         broder: 0,
         borderColor: "#F0F7F1",
       }}
       labelStyle={{
-        fontFamily: zawgyi ? "Zawgyi" : "Pyidaungsu",
+        fontFamily: zawgyi ? "" : "Pyidaungsu",
         color: "black",
         fontSize: 16,
       }}
       itemStyle={{
         color: "red",
-        fontFamily: zawgyi ? "Zawgyi" : "Pyidaungsu",
+        fontFamily: zawgyi ? "" : "Pyidaungsu",
         justifyContent: "flex-start",
       }}
       dropDownStyle={{

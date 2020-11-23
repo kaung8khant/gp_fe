@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Image,
   StyleSheet,
@@ -15,6 +15,9 @@ import analytics from "@react-native-firebase/analytics";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import CustomText from "../components/CustomText";
+import FontContext from "../utils/context/FontContext";
+import { font_converter } from "../utils/string";
+import { mm_number } from "../utils/burmese";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -22,6 +25,9 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [product, setProduct] = useState(null);
   const [disable, setDisable] = useState(false);
   const { itemId } = route.params;
+  const { zawgyi, setZawgyi } = useContext(FontContext);
+
+  const converter = (string) => font_converter(string, zawgyi);
 
   useEffect(() => {
     productDetail(itemId).then((data) => {
@@ -137,16 +143,19 @@ export default function ProductDetailScreen({ route, navigation }) {
           </CustomText>
         </View>
         <View>
-          <CustomText
+          <Text
             style={{
               marginRight: 20,
               marginTop: 4,
               color: "#2FB53D",
+              fontFamily: zawgyi ? "" : "Pyidaungsu",
             }}
           >
-            {product.maximum_retail_price ? product.maximum_retail_price : ""}{" "}
-            ကျပ်
-          </CustomText>
+            {product.maximum_retail_price
+              ? converter(mm_number(product.maximum_retail_price))
+              : ""}{" "}
+            {converter("ကျပ်")}
+          </Text>
         </View>
 
         <View style={{ marginTop: 20 }}>

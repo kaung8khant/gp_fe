@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Dimensions,
   ThemeProvider,
+  Keyboard,
 } from "react-native";
 import Button from "../components/Button";
 import { Input } from "react-native-elements";
@@ -30,6 +31,9 @@ export default function LocationScreen({ navigation }) {
   const [error, setError] = useState(null);
   const { auth, setAuth } = useContext(AuthContext);
 
+  useEffect(() => {
+    Keyboard.dismiss();
+  });
   let statelist = location.map((item) => {
     return { value: parseInt(item.id), label: item.translation };
   });

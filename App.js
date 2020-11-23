@@ -26,6 +26,7 @@ import LocationScreen from "./screens/LocationScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import Header from "./components/Header";
 import MainCropScreen from "./screens/MainCropScreen";
+import WeatherScreen from "./screens/WeatherScreen";
 import ActivityDetailScreen from "./screens/ActivityDetailScreen";
 import SettingScreen from "./screens/SettingScreen";
 import { navigationRef } from "./config/RootNavigation";
@@ -33,12 +34,12 @@ import CallScreen from "./screens/CallScreen";
 import analytics from "@react-native-firebase/analytics";
 import { isUnicode } from "react-native-mdetect";
 import * as Rabbit from "rabbit-node";
-// import {
-//   request,
-//   PERMISSIONS,
-//   checkNotifications,
-//   requestNotifications,
-// } from "react-native-permissions";
+import {
+  request,
+  PERMISSIONS,
+  checkNotifications,
+  requestNotifications,
+} from "react-native-permissions";
 
 axios.defaults.baseURL = "https://gp2backend-staging.goldenpaddy.com/api";
 
@@ -52,20 +53,20 @@ export default function App(props) {
   const font = { zawgyi, setZawgyi };
 
   useEffect(() => {
-    // async function log(name) {
-    //   await analytics().logScreenView({
-    //     screen_name: name,
-    //     screen_class: name,
-    //   });
-    // }
-    // request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE).then((result) => {
-    //   console.log(result);
-    // });
+    async function log(name) {
+      await analytics().logScreenView({
+        screen_name: name,
+        screen_class: name,
+      });
+    }
+    request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE).then((result) => {
+      console.log(result);
+    });
 
-    // requestNotifications(["alert", "sound"]).then(({ status, settings }) => {
-    //   // …
-    //   console.log("here->", status);
-    // });
+    requestNotifications(["alert", "sound"]).then(({ status, settings }) => {
+      // …
+      console.log("here->", status);
+    });
 
     // checkNotifications().then(({ status, settings }) => {
     //   // …
@@ -98,8 +99,8 @@ export default function App(props) {
     // zawgyi
     //   ?
     {
-      Zawgyi: require("./assets/fonts/NotoSansZawgyi-Regular.ttf"),
-      ZawgyiBold: require("./assets/fonts/NotoSansZawgyi-Bold.ttf"),
+      Zawgyi: require("./assets/fonts/Zawgyi-One.ttf"),
+      ZawgyiBold: require("./assets/fonts/Zawgyi-One.ttf"),
       //   }
       // : {
       Pyidaungsu: require("./assets/fonts/Pyidaungsu-Regular.ttf"),
@@ -132,12 +133,12 @@ export default function App(props) {
                   const currentRouteName = navigationRef.current.getCurrentRoute()
                     .name;
 
-                  // if (previousRouteName !== currentRouteName) {
-                  //   await analytics().logScreenView({
-                  //     screen_name: currentRouteName,
-                  //     screen_class: currentRouteName,
-                  //   });
-                  // }
+                  if (previousRouteName !== currentRouteName) {
+                    await analytics().logScreenView({
+                      screen_name: currentRouteName,
+                      screen_class: currentRouteName,
+                    });
+                  }
                 }}
               >
                 <Stack.Navigator>
@@ -161,6 +162,7 @@ export default function App(props) {
                       />
                       <Stack.Screen name="Setting" component={SettingScreen} />
                       <Stack.Screen name="Call" component={CallScreen} />
+                      <Stack.Screen name="Weather" component={WeatherScreen} />
                     </>
                   ) : (
                     <>

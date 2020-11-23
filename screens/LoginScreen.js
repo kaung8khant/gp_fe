@@ -78,7 +78,7 @@ export default function LoginScreen({ navigation }) {
       <View style={{ flex: 1 }}>
         <View style={styles.bottomWrapper}>
           <CustomText style={styles.inputlabel}>
-            ဖုန်းနံပါတ်နဲ့ အကောင့်ဖွင့်မယ်
+            ဖုန်းနံပါတ်နဲ့ အကောင့် ဖွင့်မယ်
           </CustomText>
           <Input
             placeholder={converter("ဖုန်းနံပါတ်ဖြည့်မယ်")}
@@ -121,17 +121,17 @@ export default function LoginScreen({ navigation }) {
           <Button
             onPress={async () => {
               Keyboard.dismiss();
-              // try {
-              //   console.log("here");
-              //   await analytics().logEvent("reg_phone_no", {
-              //     phone_number: phone,
-              //   });
-              //   await analytics().logEvent("reg_phone_continue", {
-              //     phone_number: phone,
-              //   });
-              // } catch (e) {
-              //   console.log(e);
-              // }
+              try {
+                console.log("here");
+                await analytics().logEvent("reg_phone_no", {
+                  phone_number: phone,
+                });
+                await analytics().logEvent("reg_phone_continue", {
+                  phone_number: phone,
+                });
+              } catch (e) {
+                console.log(e);
+              }
 
               login(
                 { user_input: phone },
