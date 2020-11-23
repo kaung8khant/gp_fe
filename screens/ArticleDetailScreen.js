@@ -1,35 +1,74 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as WebBrowser from "expo-web-browser";
-import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
 import { RectButton, ScrollView } from "react-native-gesture-handler";
+import { articleDetail } from "../api/explore";
+import analytics from "@react-native-firebase/analytics";
+import CustomText from "../components/CustomText";
 
-export default function ArticleDetailScreen() {
+const deviceWidth = Dimensions.get("window").width;
+
+export default function ArticleDetailScreen({ route, navigation }) {
+  const [article, setArticle] = useState(null);
+  const { itemId } = route.params;
+  console.log(itemId);
+  useEffect(() => {
+    articleDetail(itemId).then((data) => {
+      setArticle(data);
+    });
+  }, []);
+
+  if (!article) {
+    return (
+      <ScrollView style={styles.container}>
+        <Text>Loading</Text>
+      </ScrollView>
+    );
+  }
+  console.log(article);
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Text>Article Detail</Text>
-    </ScrollView>
-  );
-}
-
-function OptionButton({ icon, label, onPress, isLastOption }) {
-  return (
-    <RectButton
-      style={[styles.option, isLastOption && styles.lastOption]}
-      onPress={onPress}
-    >
-      <View style={{ flexDirection: "row" }}>
-        <View style={styles.optionIconContainer}>
-          <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
+      <View style={styles.imageContainer}>
+        <Image
+          style={styles.productImage}
+          source={
+            article.image && article.image.length > 0
+              ? { uri: article.image[0].image }
+              : require("../assets/images/product.png")
+          }
+        />
+      </View>
+      <View style={{ padding: 20 }}>
+        <View>
+          <CustomText
+            style={{
+              marginRight: 20,
+              fontSize: 16,
+              color: "#4C4C4C",
+            }}
+          >
+            {article.name}
+          </CustomText>
         </View>
-        <View style={styles.optionTextContainer}>
-          <Text style={styles.optionText}>{label}</Text>
+        <View style={{ flexDirection: "row", marginTop: 8 }}>
+          {article.tag.map((item, index) => (
+            <CustomText key={index} style={{ marginRight: 20, fontSize: 14 }}>
+              {item.translation}
+            </CustomText>
+          ))}
+        </View>
+        <View style={{ marginTop: 20 }}>
+          <Text
+            style={{ color: "#828282", fontSize: 14, fontFamily: "Pyidaungsu" }}
+          >
+            {article.translation.description_translation}
+          </Text>
         </View>
       </View>
-    </RectButton>
+    </ScrollView>
   );
 }
 
@@ -38,26 +77,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fafafa",
   },
-  contentContainer: {
-    paddingTop: 15,
+  contentContainer: {},
+  productImage: {
+    width: deviceWidth,
+    height: 250,
   },
-  optionIconContainer: {
-    marginRight: 12,
-  },
-  option: {
-    backgroundColor: "#fdfdfd",
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: 0,
-    borderColor: "#ededed",
-  },
-  lastOption: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  optionText: {
-    fontSize: 15,
-    alignSelf: "flex-start",
-    marginTop: 1,
+  imageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: deviceWidth,
+    height: 250,
+    backgroundColor: "#E9F3FD",
   },
 });

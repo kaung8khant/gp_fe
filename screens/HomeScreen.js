@@ -1,96 +1,271 @@
-import * as WebBrowser from "expo-web-browser";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   Image,
-  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  Alert,
-  Modal,
-  TouchableHighlight,
   Text,
   Dimensions,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
-import { TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Card } from "react-native-elements";
-import ListIcon from "../components/ListIcon";
-import TextWrap from "../components/TextWrap";
+import AuthContext from "../utils/context/AuthContext";
+import { getProduct, getArticle } from "../api/explore";
+import { string_excerpt } from "../utils/string";
+import analytics from "@react-native-firebase/analytics";
+import CustomText from "../components/CustomText";
+import { mm_number } from "../utils/burmese";
+import FontContext from "../utils/context/FontContext";
+import { font_converter } from "../utils/string";
+
+import TabBarIcon from "../components/TabBarIcon";
 
 const deviceWidth = Dimensions.get("window").width;
 
 export default function HomeScreen({ navigation }) {
-  const [lang, setLang] = useState("");
+  const [product, setProduct] = useState([]);
+  const [article, setArticle] = useState([]);
+  const [cropId, setCropId] = useState(null);
+  const { zawgyi, setZawgyi } = useContext(FontContext);
+
+  const converter = (string) => font_converter(string, zawgyi);
+  //setAuth(false);
   const [modalVisible, setModalVisible] = useState(false);
-  let product = [];
-  for (let index = 0; index < 4; index++) {
-    product.push(
-      <TouchableOpacity
-        key={index}
-        style={{ marginTop: 8 }}
-        onPress={() => navigation.navigate("ProductDetail")}
-      >
-        <View style={styles.product}>
-          <Image
-            style={styles.productImage}
-            source={require("../assets/images/product.png")}
-          />
-          <Text style={styles.imageLabel}>New</Text>
-        </View>
-        <View style={{ marginTop: 8 }}>
-          <Text style={{ fontSize: 14, fontWeight: "bold" }}>Product 1</Text>
-          <Text style={{ fontSize: 12, fontWeight: "bold" }}>50 CC</Text>
-          <Text style={{ fontSize: 14, fontWeight: "bold", color: "#1D9129" }}>
-            13000 kyat
-          </Text>
-        </View>
-      </TouchableOpacity>
+  useEffect(() => {
+    getProduct().then((productdata) => {
+      getArticle().then((data) => {
+        setProduct(productdata);
+        setArticle(data);
+      });
+    });
+  }, []);
+  if (!product && !article) {
+    return (
+      <ScrollView style={styles.container}>
+        <CustomText>Loading</CustomText>
+      </ScrollView>
     );
+  }
+  let feed = [];
+  let length =
+    product.length / 4 > article.length ? product.length : article.length;
+  let isproduct = product.length / 4 > article.length ? true : false;
+  let j = 0;
+  let pkey = 0;
+  let akey = 0;
+
+  for (var i = 0; i < length; isproduct ? (i = i + 4) : i++) {
+    if (isproduct) {
+      pkey = i;
+      akey = j;
+    } else {
+      pkey = j;
+      akey = i;
+    }
+    let articleItem = [];
+    if (article[akey]) {
+      let article_id = article[akey].id;
+      articleItem.push(
+        <TouchableOpacity
+          key={akey}
+          style={styles.imageContainer}
+          onPress={async () => {
+            try {
+              await analytics().logEvent("view_article", {
+                action_done: "click",
+                article_id: article_id,
+              });
+            } catch (e) {
+              console.log("log error");
+            }
+            navigation.navigate("ArticleDetail", {
+              itemId: article_id,
+            });
+          }}
+        >
+          <View style={styles.item}>
+            {article[akey].image && (
+              <Image
+                style={styles.image}
+                source={{ uri: article[akey].image }}
+              />
+            )}
+
+            <CustomText style={styles.imageLabel}>New</CustomText>
+          </View>
+          <View style={{ marginTop: 8 }}>
+            <CustomText
+              style={{
+                fontSize: 14,
+                width: deviceWidth - 40,
+                color: "#4C4C4C",
+              }}
+            >
+              {article[akey].name}
+            </CustomText>
+          </View>
+          <CustomText
+            style={{
+              marginTop: 4,
+              fontSize: 12,
+              color: "#828282",
+            }}
+          >
+            {article[akey].short_description}
+          </CustomText>
+        </TouchableOpacity>
+      );
+    }
+    let productItem = [];
+    for (let k = 0; k < 4; k++) {
+      if (product[pkey + k]) {
+        let id = product[pkey + k].id;
+        productItem.push(
+          <TouchableOpacity
+            key={k}
+            style={{ marginTop: 8 }}
+            onPress={async () => {
+              try {
+                await analytics().logEvent("view_product", {
+                  action_done: "click",
+                  product_id: product[pkey + k].id,
+                });
+              } catch (e) {
+                console.log("log error");
+              }
+              navigation.navigate("ProductDetail", {
+                itemId: id,
+              });
+            }}
+          >
+            <View style={styles.product}>
+              <Image
+                style={styles.productImage}
+                source={
+                  product[pkey + k].image
+                    ? {
+                        uri: product[pkey + k].image,
+                      }
+                    : require("../assets/images/product.png")
+                }
+              />
+              <Text style={styles.imageLabel}>New</Text>
+            </View>
+            <View style={{ marginTop: 8, maxWidth: (deviceWidth - 55) / 2 }}>
+              <CustomText
+                style={{
+                  fontSize: 14,
+
+                  color: "#4C4C4C",
+                }}
+              >
+                {string_excerpt(product[pkey + k].name)}
+              </CustomText>
+              <CustomText
+                style={{
+                  fontSize: 12,
+
+                  color: "#828282",
+                }}
+              >
+                {product[pkey + k].dosage}
+              </CustomText>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: "#1D9129",
+                  fontFamily: zawgyi ? "Zawgyi" : "Pyidaungsu",
+                }}
+              >
+                {converter(mm_number(product[pkey + k].maximum_retail_price))}
+                {converter(" ကျပ်")}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        );
+      }
+    }
+    feed.push(
+      <React.Fragment key={i}>
+        {articleItem}
+        <View style={styles.productContainer}>{productItem}</View>
+      </React.Fragment>
+    );
+
+    j++;
+    if (!isproduct) {
+      j = j + 3;
+    }
   }
   return (
     <View style={styles.container}>
       <ScrollView>
-        <TouchableOpacity
-          style={styles.imageContainer}
-          onPress={() => navigation.navigate("ArticleDetail")}
+        <View
+          style={{
+            padding: 10,
+            borderRadius: 4,
+            borderWidth: 1,
+            borderRadius: 2,
+            borderColor: "#ddd",
+            borderBottomWidth: 0,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 5,
+            flex: 1,
+            flexDirection: "row",
+          }}
         >
-          <View style={styles.item}>
+          <View style={{ width: "33.3%", height: 100 }}>
             <Image
-              style={styles.image}
-              source={require("../assets/images/farm.png")}
+              style={{ width: "90%", height: 100 }}
+              source={require("../assets/images/cloudy.png")}
             />
-            <Text style={styles.imageLabel}>New</Text>
           </View>
-          <View style={{ marginTop: 8 }}>
-            <Text style={{ fontSize: 14, width: deviceWidth - 40 }}>
-              Article Title
+          <View
+            style={{
+              width: "33.3%",
+              height: 100,
+              flex: 1,
+              flexDirection: "column",
+              textAlign: "center",
+              padding: 20,
+            }}
+          >
+            <Text>Cloudy</Text>
+            <Text style={{ fontSize: 30 }}>22'C</Text>
+          </View>
+          <View style={{ width: "33.3%", height: 100, padding: 20 }}>
+            <Text
+              style={{
+                backgroundColor: "#E7F5E7",
+                elevation: 0,
+                shadowOffset: {
+                  width: 0,
+                  height: 0,
+                },
+                textAlign: "center",
+                position: "absolute",
+                right: 20,
+                bottom: 20,
+                padding: 5,
+              }}
+            >
+              Yangon
             </Text>
           </View>
-          <Text style={{ fontSize: 12 }}>Article text</Text>
-        </TouchableOpacity>
-        <View style={styles.productContainer}>{product}</View>
+        </View>
+
+        {feed}
       </ScrollView>
     </View>
-  );
-}
-
-HomeScreen.navigationOptions = {
-  header: null,
-};
-
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync(
-    "https://docs.expo.io/versions/latest/workflow/development-mode/"
-  );
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    "https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change"
   );
 }
 
@@ -112,16 +287,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
+    marginTop: 20,
   },
   item: {},
   image: {
     width: deviceWidth - 40,
-    height: (deviceWidth - 140) / 2,
+    height: (deviceWidth - 170) / 2,
     borderRadius: 2,
   },
   productImage: {
     width: (deviceWidth - 55) / 2,
-    height: (deviceWidth - 55) / 2,
+    height: (deviceWidth - 100) / 2,
+    borderRadius: 2,
   },
   imageLabel: {
     position: "absolute",
@@ -141,7 +318,7 @@ const styles = StyleSheet.create({
   },
   product: {
     width: (deviceWidth - 55) / 2,
-    height: (deviceWidth - 55) / 2,
+    height: (deviceWidth - 100) / 2,
     backgroundColor: "#E9F3FD",
     borderRadius: 2,
   },

@@ -1,54 +1,133 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as WebBrowser from "expo-web-browser";
-import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { RectButton, ScrollView } from "react-native-gesture-handler";
+import { getActivity } from "../api/activiy";
+import { string_excerpt } from "../utils/string";
+import analytics from "@react-native-firebase/analytics";
 
-export default function ActivityScreen() {
+const deviceWidth = Dimensions.get("window").width;
+
+export default function ActivityScreen({ navigation }) {
+  const [noti, setNoti] = useState(null);
+
+  useEffect(() => {
+    if (!noti) {
+      getActivity().then((data) => {
+        setNoti(data);
+      });
+    }
+  }, [noti]);
+
+  if (!noti) {
+    return (
+      <ScrollView style={styles.container}>
+        <Text>Loading</Text>
+      </ScrollView>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <OptionButton
-        icon="md-school"
-        label="Read the Expo documentation"
-        onPress={() => WebBrowser.openBrowserAsync("https://docs.expo.io")}
-      />
+      {noti.length > 0 &&
+        noti.map((item, index) => {
+          let image = item.picture ? item.picture : item.type_picture;
 
-      <OptionButton
-        icon="md-compass"
-        label="Read the React Navigation documentation"
-        onPress={() =>
-          WebBrowser.openBrowserAsync("https://reactnavigation.org")
-        }
-      />
+          return (
+            <TouchableOpacity
+              key={index}
+              style={{
+                flex: 1,
+                //marginTop: 40,
+                flexDirection: "row",
+                maxWidth: deviceWidth - 20,
+              }}
+              onPress={async () => {
+                try {
+                  await analytics().logEvent("view_noti", {
+                    action_done: "click",
+                    activity_id: "test",
+                  });
+                } catch (error) {
+                  console.log("log error");
+                }
 
-      <OptionButton
-        icon="ios-chatboxes"
-        label="Ask a question on the forums"
-        onPress={() => WebBrowser.openBrowserAsync("https://forums.expo.io")}
-        isLastOption
-      />
+                navigation.navigate("ActivityDetail", {
+                  itemId: item.id,
+                });
+              }}
+            >
+              <View
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 30,
+                  backgroundColor: "#E9F3FD",
+                  marginLeft: 20,
+                  marginRight: 20,
+                }}
+              >
+                <Image
+                  source={
+                    image
+                      ? { uri: image }
+                      : require("../assets/images/product.png")
+                  }
+                  style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: 30,
+                  }}
+                />
+              </View>
+              <View style={{ minHeight: 80 }}>
+                <View
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 14,
+                    width: deviceWidth - 120,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Pyidaungsu",
+                    }}
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    fontSize: 12,
+                    wordBreak: "break-word",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Pyidaungsu",
+                    }}
+                  >
+                    {string_excerpt(item.description, 35)}
+                  </Text>
+                </View>
+                <View style={{ fontSize: 10 }}>
+                  <Text>{item.time}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
     </ScrollView>
-  );
-}
-
-function OptionButton({ icon, label, onPress, isLastOption }) {
-  return (
-    <RectButton
-      style={[styles.option, isLastOption && styles.lastOption]}
-      onPress={onPress}
-    >
-      <View style={{ flexDirection: "row" }}>
-        <View style={styles.optionIconContainer}>
-          <Ionicons name={icon} size={22} color="rgba(0,0,0,0.35)" />
-        </View>
-        <View style={styles.optionTextContainer}>
-          <Text style={styles.optionText}>{label}</Text>
-        </View>
-      </View>
-    </RectButton>
   );
 }
 
@@ -58,25 +137,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fafafa",
   },
   contentContainer: {
-    paddingTop: 15,
-  },
-  optionIconContainer: {
-    marginRight: 12,
-  },
-  option: {
-    backgroundColor: "#fdfdfd",
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: 0,
-    borderColor: "#ededed",
-  },
-  lastOption: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  optionText: {
-    fontSize: 15,
-    alignSelf: "flex-start",
-    marginTop: 1,
+    marginTop: 20,
+    paddingBottom: 20,
   },
 });
