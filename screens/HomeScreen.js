@@ -113,6 +113,7 @@ export default function HomeScreen({ navigation }) {
                 fontSize: 14,
                 width: deviceWidth - 40,
                 color: "#4C4C4C",
+                fontWeight: "bold",
               }}
             >
               {article[akey].name}
@@ -137,7 +138,7 @@ export default function HomeScreen({ navigation }) {
         productItem.push(
           <TouchableOpacity
             key={k}
-            style={{ marginTop: 8 }}
+            style={{ marginTop: 8, marginBottom: 15 }}
             onPress={async () => {
               try {
                 await analytics().logEvent("view_product", {
@@ -169,7 +170,7 @@ export default function HomeScreen({ navigation }) {
               <CustomText
                 style={{
                   fontSize: 14,
-
+                  fontWeight: "bold",
                   color: "#4C4C4C",
                 }}
               >
@@ -186,9 +187,10 @@ export default function HomeScreen({ navigation }) {
               </CustomText>
               <Text
                 style={{
-                  fontSize: 14,
                   color: "#1D9129",
                   fontFamily: zawgyi ? "" : "Pyidaungsu",
+                  fontWeight: zawgyi ? "bold" : "PyidaungsuBold",
+                  fontSize: 14,
                 }}
               >
                 {converter(mm_number(product[pkey + k].maximum_retail_price))}

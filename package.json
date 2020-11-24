@@ -24,6 +24,7 @@
     "expo-updates": "~0.3.2",
     "firebase": "^8.0.1",
     "moment": "^2.29.1",
+    "native-base": "^2.13.14",
     "rabbit-node": "^1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",

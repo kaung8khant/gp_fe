@@ -6,6 +6,7 @@ import { Card } from "react-native-elements";
 import CustomText from "../components/CustomText";
 import { Entypo } from "@expo/vector-icons";
 import { status } from "../utils/weatherStatus";
+import { mm_number } from "../utils/burmese";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -23,7 +24,6 @@ const WeatherCard = ({ data, navigation }) => {
           <View
             style={{
               flex: 1,
-
               justifyContent: "center",
               margin: "auto",
               alignItems: "center",
@@ -52,7 +52,8 @@ const WeatherCard = ({ data, navigation }) => {
           <View style={{ flex: 1, marginTop: 5 }}>
             <View style={{ flex: 1 }}>
               <CustomText style={{ textAlign: "center", fontSize: 10 }}>
-                မိုးရွာရန် ၃၀ ရာနှုန်း
+                မိုးရွာရန်{" "}
+                {mm_number(Math.round(data.precip_probability * 100))} ရာနှုန်း
               </CustomText>
             </View>
             <View style={{ flex: 1 }}>
@@ -70,7 +71,7 @@ const WeatherCard = ({ data, navigation }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <CustomText>ဒလ</CustomText>
+                <CustomText>{data.township}</CustomText>
                 <Entypo name="chevron-small-down" size={20} color="black" />
               </View>
             </View>

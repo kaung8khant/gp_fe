@@ -98,7 +98,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           <CustomText
             style={{
               fontSize: 16,
-              fontFamily: "PyidaungsuBold",
+              fontWeight: "bold",
               marginRight: 20,
               color: "#4C4C4C",
             }}
@@ -114,6 +114,7 @@ export default function ProductDetailScreen({ route, navigation }) {
                 marginRight: 20,
                 fontSize: 14,
                 fontFamily: "Pyidaungsu",
+                color: "#000",
               }}
             >
               {item.translation}
@@ -171,7 +172,9 @@ export default function ProductDetailScreen({ route, navigation }) {
         </View>
         <View style={{ textAlign: "left" }}>
           <View style={{ marginTop: 20 }}>
-            <CustomText style={{ fontSize: 14 }}>ဆိုင်နေရာ</CustomText>
+            <CustomText style={{ fontSize: 14, color: "black" }}>
+              ဆိုင်နေရာ
+            </CustomText>
           </View>
           <View>
             <CustomText

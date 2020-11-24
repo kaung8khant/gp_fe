@@ -47,7 +47,8 @@ export default function BottomTabNavigator({ navigation, route }) {
     activeTintColor: "#2fb53d",
     inactiveTintColor: "#828282",
     style: {
-      paddingBottom: 20,
+      //paddingTop: 5,
+      paddingBottom: 10,
       height: 70,
     },
     labelStyle: {
@@ -64,7 +65,11 @@ export default function BottomTabNavigator({ navigation, route }) {
           onPress={() => navigation.navigate("Call")}
         >
           <View
-            style={{ backgroundColor: "#E7F5E7", borderRadius: 70, padding: 2 }}
+            style={{
+              backgroundColor: "#E7F5E7",
+              borderRadius: 70,
+              padding: 2,
+            }}
           >
             <MaterialIcons
               name="local-phone"

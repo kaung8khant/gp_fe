@@ -100,12 +100,18 @@ export default function ActivityScreen({ navigation }) {
               <View style={{ minHeight: 80 }}>
                 <View
                   style={{
-                    fontWeight: "bold",
-                    fontSize: 14,
                     width: deviceWidth - 120,
                   }}
                 >
-                  <CustomText>{item.name}</CustomText>
+                  <CustomText
+                    style={{
+                      fontWeight: "bold",
+                      fontSize: 14,
+                      color: "#4C4C4C",
+                    }}
+                  >
+                    {item.name}
+                  </CustomText>
                 </View>
                 <View
                   style={{
@@ -113,7 +119,7 @@ export default function ActivityScreen({ navigation }) {
                     wordBreak: "break-word",
                   }}
                 >
-                  <CustomText>
+                  <CustomText style={{ color: "#4C4C4C", fontSize: 12 }}>
                     {string_excerpt(item.description, 35)}
                   </CustomText>
                 </View>

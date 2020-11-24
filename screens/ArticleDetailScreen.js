@@ -48,6 +48,7 @@ export default function ArticleDetailScreen({ route, navigation }) {
               marginRight: 20,
               fontSize: 16,
               color: "#4C4C4C",
+              fontWeight: "bold",
             }}
           >
             {article.name}
@@ -55,7 +56,10 @@ export default function ArticleDetailScreen({ route, navigation }) {
         </View>
         <View style={{ flexDirection: "row", marginTop: 8 }}>
           {article.tag.map((item, index) => (
-            <CustomText key={index} style={{ marginRight: 20, fontSize: 14 }}>
+            <CustomText
+              key={index}
+              style={{ marginRight: 20, fontSize: 14, color: "black" }}
+            >
               {item.translation}
             </CustomText>
           ))}

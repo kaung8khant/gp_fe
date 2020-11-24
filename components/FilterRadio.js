@@ -51,10 +51,14 @@ const FilterRadio = ({ type, style, onChange }) => {
           marginBottom: 10,
           paddingRight: 20,
           paddingLeft: 20,
-          marginTop: 20,
+          marginTop: 30,
         }}
       >
-        <CustomText>စိုက်နည်းပျိုးနည်းနဲ့ သွင်းအားစုမျာ</CustomText>
+        <CustomText
+          style={{ fontWeight: "bold", fontSize: 16, color: "#4c4c4c" }}
+        >
+          စိုက်နည်းပျိုးနည်းနဲ့ သွင်းအားစုမျာ
+        </CustomText>
       </View>
       <View
         style={{
@@ -98,7 +102,7 @@ const FilterRadio = ({ type, style, onChange }) => {
                 style={{
                   fontSize: 12,
                   textAlign: "center",
-                  marginTop: 2,
+                  marginTop: 4,
                   color: active === item.id ? "#2FB53D" : "black",
                 }}
               >
