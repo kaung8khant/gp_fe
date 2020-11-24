@@ -136,6 +136,7 @@ export default function LoginScreen({ navigation }) {
               login(
                 { user_input: phone },
                 () => setAuth(true), //if not new user
+                //() => navigation.navigate("Location"),
                 () => navigation.navigate("Location"), //if new user
                 setError
               );

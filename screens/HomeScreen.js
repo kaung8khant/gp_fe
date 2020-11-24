@@ -20,6 +20,7 @@ import { mm_number } from "../utils/burmese";
 import FontContext from "../utils/context/FontContext";
 import { font_converter } from "../utils/string";
 import WeatherCard from "../components/WeatherCard";
+import FilterRadio from "../components/FilterRadio";
 
 import TabBarIcon from "../components/TabBarIcon";
 
@@ -36,17 +37,22 @@ export default function HomeScreen({ navigation }) {
   //setAuth(false);
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
-    getProduct().then((productdata) => {
-      getArticle().then((data) => {
-        getCurrentWeather().then((weatherdata) => {
-          setWeather(weatherdata);
-        });
+    console.log("crop change");
+    getProduct(cropId).then((productdata) => {
+      getArticle(cropId).then((data) => {
         setProduct(productdata ? productdata : []);
         setArticle(data ? data : []);
       });
     });
-  }, []);
+  }, [cropId]);
 
+  useEffect(() => {
+    if (!weather) {
+      getCurrentWeather().then((weatherdata) => {
+        setWeather(weatherdata);
+      });
+    }
+  }, [weather]);
   if (!product && !article && !weather) {
     return (
       <ScrollView style={styles.container}>
@@ -209,6 +215,7 @@ export default function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <ScrollView style={{ padding: 5 }}>
         <WeatherCard data={weather} navigation={navigation} />
+        <FilterRadio onChange={(id) => setCropId(id)} />
         <View style={{ padding: 15 }}>{feed}</View>
       </ScrollView>
     </View>

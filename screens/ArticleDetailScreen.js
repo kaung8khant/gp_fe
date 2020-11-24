@@ -61,11 +61,11 @@ export default function ArticleDetailScreen({ route, navigation }) {
           ))}
         </View>
         <View style={{ marginTop: 20 }}>
-          <Text
+          <CustomText
             style={{ color: "#828282", fontSize: 14, fontFamily: "Pyidaungsu" }}
           >
             {article.translation.description_translation}
-          </Text>
+          </CustomText>
         </View>
       </View>
     </ScrollView>

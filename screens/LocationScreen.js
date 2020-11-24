@@ -31,9 +31,6 @@ export default function LocationScreen({ navigation }) {
   const [error, setError] = useState(null);
   const { auth, setAuth } = useContext(AuthContext);
 
-  useEffect(() => {
-    Keyboard.dismiss();
-  });
   let statelist = location.map((item) => {
     return { value: parseInt(item.id), label: item.translation };
   });

@@ -29,12 +29,11 @@ const TownshipDropdown = ({
         color: "rgba(0,0,0,0.3)",
         fontSize: 16,
       }}
-      selectedLabelStyle={{ color: "black" }}
+      selectedLabelStyle={{ color: "#2FB53D", fontSize: 12 }}
       containerStyle={{
         height: 30,
         border: 0,
       }}
-      dropDownMaxHeight={dropDownMaxHeight}
       disabled={disabled}
       style={{
         fontFamily: zawgyi ? "" : "Pyidaungsu",
@@ -60,8 +59,11 @@ const TownshipDropdown = ({
       dropDownStyle={{
         backgroundColor: "#F0F7F1",
         borderColor: "#F0F7F1",
+        zIndex: 1000,
+        position: "absolute",
       }}
       onChangeItem={(item) => onChange(item.value)}
+      zIndex={5000}
     />
   );
 };

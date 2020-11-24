@@ -23,6 +23,15 @@
     },
     {
       "type": "ONE_OF_MANY",
+      "filters": [],
+      "properties": [],
+      "versionCode": 1,
+      "versionName": "1.0",
+      "enabled": true,
+      "outputFile": "app-universal-release.apk"
+    },
+    {
+      "type": "ONE_OF_MANY",
       "filters": [
         {
           "filterType": "ABI",
@@ -34,15 +43,6 @@
       "versionName": "1.0",
       "enabled": true,
       "outputFile": "app-armeabi-v7a-release.apk"
-    },
-    {
-      "type": "ONE_OF_MANY",
-      "filters": [],
-      "properties": [],
-      "versionCode": 1,
-      "versionName": "1.0",
-      "enabled": true,
-      "outputFile": "app-universal-release.apk"
     }
   ]
 }

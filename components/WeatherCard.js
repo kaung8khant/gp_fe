@@ -42,10 +42,10 @@ const WeatherCard = ({ data, navigation }) => {
               <CustomText
                 style={{ textAlign: "center", color: "#828282", fontSize: 10 }}
               >
-                တိမ်ထူထပ်
+                {status(data.icon).name}
               </CustomText>
               <Text style={{ textAlign: "center", fontSize: 24, marginTop: 6 }}>
-                22' C
+                {Math.round((parseInt(data.temp) - 32) * (5 / 9))}° C
               </Text>
             </View>
           </View>
