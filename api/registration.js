@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import * as RootNavigation from "../config/RootNavigation.js";
+import analytics from "@react-native-firebase/analytics";
 //  param {user_input}
 const login = async (
   values,
@@ -13,30 +15,37 @@ const login = async (
     if (!response.data.data.is_valid) {
       onError("Phone number is not valid");
     } else {
-      AsyncStorage.setItem("access_token", response.data.data.token);
+      AsyncStorage.setItem("access_token2", response.data.data.token);
 
-      let header = {
-        headers: {
-          Authorization: `Bearer ${AsyncStorage.getItem("access_token")}`,
-        },
-      };
+      console.log("login", response.data.data);
       await FCM_token(response.data.data.token);
+
+      await analytics().setUserId("" + response.data.data.user_id);
+
       if (response.data.data.is_new_user) {
         AsyncStorage.setItem("new_user", "1");
+
         callback2();
       } else {
-        let token = await AsyncStorage.getItem("access_token");
-        callback();
+        let res = await check_user();
+        //  let token = await AsyncStorage.getItem("access_token");
+        if (res) {
+          RootNavigation.navigate(res);
+        } else {
+          AsyncStorage.setItem("access_token", response.data.data.token);
+          callback();
+        }
       }
     }
   } catch (e) {
+    console.log(e);
     onError("Server Error");
   }
 };
 
 const locationAPI = async (values, callback = () => {}) => {
   try {
-    let token = await AsyncStorage.getItem("access_token");
+    let token = await AsyncStorage.getItem("access_token2");
 
     let header = {
       headers: {
@@ -59,7 +68,7 @@ const locationAPI = async (values, callback = () => {}) => {
 };
 const mainCropAPI = async (values, callback = () => {}) => {
   try {
-    let token = await AsyncStorage.getItem("access_token");
+    let token = await AsyncStorage.getItem("access_token2");
 
     let header = {
       headers: {
@@ -73,6 +82,7 @@ const mainCropAPI = async (values, callback = () => {}) => {
       return Promise.reject("error occur");
     }
 
+    AsyncStorage.setItem("access_token", token);
     // try {
     //   analytics.setUserProperties({
     //     main_crop: cropname,
@@ -112,4 +122,33 @@ const FCM_token = async (token) => {
     console.log(e);
   }
 };
-export { login, locationAPI, mainCropAPI };
+
+const check_user = async () => {
+  try {
+    let token = await AsyncStorage.getItem("access_token2");
+
+    let header = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    if (token) {
+      let response = await axios.get(`/account/user/check/`, header);
+      if (!response.data) {
+        return Promise.reject("error occur");
+      }
+      if (!response.data.data.is_location_selected) {
+        return "Location";
+      } else if (!response.data.data.is_tag_selected) {
+        return "MainCrop";
+      } else {
+        return false;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export { login, locationAPI, mainCropAPI, check_user };

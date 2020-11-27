@@ -40,6 +40,14 @@ import {
   checkNotifications,
   requestNotifications,
 } from "react-native-permissions";
+import { check_user } from "./api/registration";
+
+import * as Sentry from "@sentry/react-native";
+
+Sentry.init({
+  dsn:
+    "https://e9422b0edbba41d0a5ec491973dd203f@o481695.ingest.sentry.io/5530746",
+});
 
 axios.defaults.baseURL = "https://gp2backend-staging.goldenpaddy.com/api";
 
@@ -47,6 +55,7 @@ const Stack = createStackNavigator();
 
 export default function App(props) {
   const [auth, setAuth] = useState(false);
+
   const [zawgyi, setZawgyi] = useState(false);
   const routeNameRef = React.useRef();
   const value = { auth, setAuth };
@@ -59,6 +68,7 @@ export default function App(props) {
         screen_class: name,
       });
     }
+
     request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE).then((result) => {
       console.log(result);
     });
@@ -78,6 +88,8 @@ export default function App(props) {
     });
 
     if (!auth) {
+      console.log("here===>");
+
       AsyncStorage.getItem("access_token").then((data) => {
         if (data) {
           setAuth(true);

@@ -50,11 +50,22 @@ const WeatherCard = ({ data, navigation }) => {
             </View>
           </View>
           <View style={{ flex: 1, marginTop: 5 }}>
-            <View style={{ flex: 1 }}>
-              <CustomText style={{ textAlign: "center", fontSize: 10 }}>
-                မိုးရွာရန်{" "}
-                {mm_number(Math.round(data.precip_probability * 100))} ရာနှုန်း
+            <View style={{ flex: 1, flexDirection: "row" }}>
+              <CustomText
+                style={{ textAlign: "center", fontSize: 10, marginTop: 2 }}
+              >
+                မိုးရွာရန်
               </CustomText>
+              <Text>
+                {" "}
+                {mm_number(Math.round(data.precip_probability * 100))}{" "}
+              </Text>
+              <CustomText
+                style={{ textAlign: "center", fontSize: 10, marginTop: 2 }}
+              >
+                ရာနှုန်း
+              </CustomText>
+              {/* {mm_number(Math.round(data.precip_probability * 100))} ရာနှုန်း */}
             </View>
             <View style={{ flex: 1 }}>
               <View
@@ -71,7 +82,9 @@ const WeatherCard = ({ data, navigation }) => {
                   justifyContent: "space-between",
                 }}
               >
-                <CustomText>{data.township}</CustomText>
+                <CustomText style={{ fontSize: 12, color: "#2FB53D" }}>
+                  {data.township}
+                </CustomText>
                 <Entypo name="chevron-small-down" size={20} color="black" />
               </View>
             </View>

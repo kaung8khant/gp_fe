@@ -57,7 +57,7 @@ const TownshipDropdown = ({
         justifyContent: "flex-start",
       }}
       dropDownStyle={{
-        backgroundColor: "#F0F7F1",
+        backgroundColor: "#fff",
         borderColor: "#F0F7F1",
         zIndex: 1000,
         position: "absolute",

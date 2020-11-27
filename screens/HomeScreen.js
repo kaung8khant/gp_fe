@@ -37,7 +37,6 @@ export default function HomeScreen({ navigation }) {
   //setAuth(false);
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
-    console.log("crop change");
     getProduct(cropId).then((productdata) => {
       getArticle(cropId).then((data) => {
         setProduct(productdata ? productdata : []);
@@ -188,8 +187,8 @@ export default function HomeScreen({ navigation }) {
               <Text
                 style={{
                   color: "#1D9129",
-                  fontFamily: zawgyi ? "" : "Pyidaungsu",
-                  fontWeight: zawgyi ? "bold" : "PyidaungsuBold",
+                  fontFamily: zawgyi ? "" : "PyidaungsuBold",
+                  fontWeight: zawgyi ? "bold" : "",
                   fontSize: 14,
                 }}
               >

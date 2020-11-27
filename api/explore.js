@@ -112,7 +112,6 @@ const getWeather = async () => {
     };
     let response = await axios.get(`/weather/data/`, header);
 
-    console.log(response.data);
     if (!response.data) {
       return Promise.reject("error occur");
     }
@@ -131,7 +130,6 @@ const getTownship = async (header) => {
   try {
     let response = await axios.get(`/location/township/list/`, header);
 
-    console.log(response.data);
     if (!response.data) {
       return Promise.reject("error occur");
     }

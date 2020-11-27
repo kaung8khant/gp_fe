@@ -37,7 +37,7 @@ PushNotification.configure({
       let url = "";
       let noti = null;
       if (notification.data.notification) {
-        JSON.parse(notification.data.notification);
+        noti = JSON.parse(notification.data.notification);
         url = notification.data.url;
       } else {
         noti = notification;

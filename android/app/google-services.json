@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "822793503309",
-    "firebase_url": "https://gp2-staging.firebaseio.com",
-    "project_id": "gp2-staging",
-    "storage_bucket": "gp2-staging.appspot.com"
+    "project_number": "262549370547",
+    "firebase_url": "https://gp2-development.firebaseio.com",
+    "project_id": "gp2-development",
+    "storage_bucket": "gp2-development.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:822793503309:android:bdb65d116871fea4cd5204",
+        "mobilesdk_app_id": "1:262549370547:android:5e1212519ed6ffacc5a2c6",
         "android_client_info": {
           "package_name": "com.gp2bare"
         }
       },
       "oauth_client": [
         {
-          "client_id": "822793503309-ffagps0k2qvmo7scvb8ikn3mtql96bo0.apps.googleusercontent.com",
+          "client_id": "262549370547-e68fq8eotp0ps83priodrav7a3rsh67k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDrilD2gn2jWgHI6kiSlrvqkTK7zv6Cypo"
+          "current_key": "AIzaSyDY8yFIpxh1wZlUanyf8cachiJQ0YTegWg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "822793503309-ffagps0k2qvmo7scvb8ikn3mtql96bo0.apps.googleusercontent.com",
+              "client_id": "262549370547-e68fq8eotp0ps83priodrav7a3rsh67k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

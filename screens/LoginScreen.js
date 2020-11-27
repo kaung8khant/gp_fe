@@ -46,7 +46,6 @@ export default function LoginScreen({ navigation }) {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Text>{zawgyi ? "Zawgyi" : "Unicode"}</Text>
       <View style={{ flex: 1 }}>
         <Stepper style={{ margin: 20, marginTop: 40 }} active={1} />
         <View style={{ marginTop: 10, padding: 20 }}>
